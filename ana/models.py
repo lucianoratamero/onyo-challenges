@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
-from django.db import models
+from core.models import LottoTicket
 
-# Create your models here.
+
+class LottoTicket(LottoTicket):
+    app_label = 'ana'
