@@ -13,6 +13,11 @@ urlpatterns = [
     }),
 ]
 
+if 'ana' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+        url(r'^api/v0/ana/', include('ana.urls', namespace='ana')),
+    )
+
 if 'bob' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
         url(r'^api/v0/bob/', include('bob.urls', namespace='bob')),
