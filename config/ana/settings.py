@@ -20,4 +20,4 @@ DATABASE_ROUTERS += ['config.ana.db_router.AnaDBRouter']
 Configuration needed to fully decouple APIs
 '''
 
-CURRENT_BOB_API_URL = 'http://lucianoratamero-onyo-bob.herokuapp.com/api/v0/bob/'
+CURRENT_BOB_API_URL = os.environ.get('CURRENT_BOB_API_URL')
