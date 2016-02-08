@@ -9,13 +9,17 @@ To setup this project to development, you need to clone this project, create and
 First, install some OS dependencies. This differs from distro to distro, so I will only tell how to do it on Ubuntu 14.04:
 
 ```
-sudo apt-get install python-dev postgresql postgresql-server-dev-9.3 libncurses-dev python-pip
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install python-dev libncurses-dev python-setuptools postgresql-9.5
 ```
 
 After that, you need to install the virtualenv package through pip:
 
 ```
-pip install virtualenv
+sudo easy_install pip
+sudo pip install virtualenv
 ```
 
 Then, we can install our project :)
@@ -50,8 +54,8 @@ sudo -u postgres psql
 Then, export the username and password as DB_USER and DB_PASS so our Django apps know how to connect to postgresql databases. I usually export both using the postactivate script, which is executed each time you activate this virtualenv. What you need to do is this:
 
 ```
-export DB_USER=onyo && echo 'export DB_USER=postgres' >> bin/postactivate
-export DB_USER=onyo && echo 'export DB_USER=[the-password-you-set-into-postgres]' >> bin/postactivate
+export DB_USER=postgres && echo 'export DB_USER=postgres' >> bin/postactivate
+export DB_USER=postgres && echo 'export DB_USER=[the-password-you-set-into-postgres]' >> bin/postactivate
 ```
 
 Phew! Almost done! Now, all you need to do is to run the migration commands:
