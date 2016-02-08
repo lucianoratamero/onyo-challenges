@@ -4,10 +4,12 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.views.static import serve
 
-urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+from core.views import index
 
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+urlpatterns = [
+    url(r'^$', index, name='index'),
+
+    url(r'^admin/', admin.site.urls),
 
     url(r'^static/(?P<path>.*)$', serve, {
         'document_root': settings.STATIC_ROOT,
