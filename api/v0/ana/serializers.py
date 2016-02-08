@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from rest_framework import serializers
-
+from core.serializers import LottoTicketSerializer as CoreLottoTicketSerializer
 from api.v0.ana.models import LottoTicket
 
 
-class LottoTicketSerializer(serializers.ModelSerializer):
+class LottoTicketSerializer(CoreLottoTicketSerializer):
 
-    class Meta:
-        model = LottoTicket
+    def create(self, validated_data):
+        return LottoTicket.objects.create(**validated_data)
