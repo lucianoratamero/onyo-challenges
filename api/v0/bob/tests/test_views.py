@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from bob.models import LottoTicket
+from api.v0.bob.models import LottoTicket
 
 
 class LottoTicketResultAPIViewTestCase(APITestCase):
@@ -18,7 +18,7 @@ class LottoTicketResultAPIViewTestCase(APITestCase):
 
     # Unit Tests
 
-    @patch('bob.views.LottoTicketSerializer')
+    @patch('api.v0.bob.views.LottoTicketSerializer')
     def test_unit__post_returns_200_OK_if_serializer_is_valid(self, mocked_serializer):
         expected_data = self.data
         expected_data.update({'is_winner': False})
@@ -31,7 +31,7 @@ class LottoTicketResultAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.content, '{"is_winner":false,"numbers":[1,2,3,4,5,6]}')
 
-    @patch('bob.views.LottoTicketSerializer')
+    @patch('api.v0.bob.views.LottoTicketSerializer')
     def test_unit__post_returns_400_BAD_REQUEST_if_serializer_is_not_valid(self, mocked_serializer):
         mocked_serializer().is_valid.return_value = False
         mocked_serializer().errors = {'numbers': ['This field is required.']}

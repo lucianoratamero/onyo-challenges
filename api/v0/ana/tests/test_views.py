@@ -7,8 +7,8 @@ from django.test import LiveServerTestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ana.models import LottoTicket
-from ana.exceptions import BobTicketBadRequestException
+from api.v0.ana.models import LottoTicket
+from api.v0.ana.exceptions import BobTicketBadRequestException
 
 
 class LottoTicketResultAPIViewTestCase(APITestCase, LiveServerTestCase):
@@ -22,8 +22,8 @@ class LottoTicketResultAPIViewTestCase(APITestCase, LiveServerTestCase):
 
     # Unit Tests
 
-    @patch('ana.views.LottoTicketSerializer')
-    @patch('ana.views.LottoTicketRepository')
+    @patch('api.v0.ana.views.LottoTicketSerializer')
+    @patch('api.v0.ana.views.LottoTicketRepository')
     def test_unit__post_returns_200_OK_if_serializer_is_valid(self, mocked_repository, mocked_serializer):
         dummy_lotto_ticket = LottoTicket(is_winner=False, numbers=[1, 2, 3, 4, 5, 6])
         dummy_lotto_ticket.save()
@@ -39,7 +39,7 @@ class LottoTicketResultAPIViewTestCase(APITestCase, LiveServerTestCase):
         self.assertIn('is_winner', response.content)
         self.assertIn('numbers', response.content)
 
-    @patch('ana.views.LottoTicketSerializer')
+    @patch('api.v0.ana.views.LottoTicketSerializer')
     def test_unit__post_returns_400_BAD_REQUEST_if_serializer_is_not_valid(self, mocked_serializer):
         mocked_serializer().is_valid.return_value = False
         mocked_serializer().errors = {'numbers': ['This field is required.']}
@@ -49,8 +49,8 @@ class LottoTicketResultAPIViewTestCase(APITestCase, LiveServerTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.content, '{"numbers":["This field is required."]}')
 
-    @patch('ana.views.LottoTicketSerializer')
-    @patch('ana.views.LottoTicketRepository')
+    @patch('api.v0.ana.views.LottoTicketSerializer')
+    @patch('api.v0.ana.views.LottoTicketRepository')
     def test_unit__post_returns_400_BAD_REQUEST_if_repository_raises_bad_request_exception(self, mocked_repository, mocked_serializer):
         mocked_serializer().is_valid.return_value = True
         mocked_repository().get_by_numbers.side_effect = BobTicketBadRequestException

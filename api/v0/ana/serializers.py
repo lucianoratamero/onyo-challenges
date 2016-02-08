@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from ana.models import LottoTicket
+from api.v0.ana.models import LottoTicket
 
 
 class LottoTicketSerializer(serializers.ModelSerializer):

@@ -3,7 +3,7 @@ import os
 from config.base_settings import *
 
 INSTALLED_APPS += [
-    'bob',
+    'api.v0.bob',
 ]
 
 DATABASES['bob_db'] = {

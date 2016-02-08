@@ -3,7 +3,7 @@ import os
 from config.base_settings import *
 
 INSTALLED_APPS += [
-    'ana',
+    'api.v0.ana',
 ]
 
 DATABASES['ana_db'] = {

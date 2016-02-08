@@ -5,14 +5,14 @@ from mock import patch
 from django.conf import settings
 from django.test import TestCase
 
-from ana.services import get_bob_ticket_by_numbers
-from ana.exceptions import BobTicketBadRequestException
+from api.v0.ana.services import get_bob_ticket_by_numbers
+from api.v0.ana.exceptions import BobTicketBadRequestException
 
 
 class GetBobTicketByNumbersTestCase(TestCase):
 
-    @patch('ana.services.urllib2.urlopen')
-    @patch('ana.services.urllib2.Request')
+    @patch('api.v0.ana.services.urllib2.urlopen')
+    @patch('api.v0.ana.services.urllib2.Request')
     def test_service(self, mocked_request, mocked_urlopen):
         expected_data = json.dumps({'numbers': [1, 2]})
 
@@ -23,7 +23,7 @@ class GetBobTicketByNumbersTestCase(TestCase):
         self.assertTrue(mocked_urlopen.called_once_with(mocked_request(), expected_data))
         self.assertEqual(response, mocked_urlopen().read())
 
-    @patch('ana.services.urllib2.urlopen')
+    @patch('api.v0.ana.services.urllib2.urlopen')
     def test_service_raises_exception_if_bad_request_is_made(self, mocked_urlopen):
         mocked_urlopen.side_effect = BobTicketBadRequestException
 

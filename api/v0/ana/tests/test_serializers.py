@@ -2,7 +2,7 @@
 
 from django.test import TestCase
 
-from bob.serializers import LottoTicketSerializer
+from api.v0.ana.serializers import LottoTicketSerializer
 
 
 class LottoTicketSerializerTestCase(TestCase):

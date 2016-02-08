@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from bob.models import LottoTicket
+from api.v0.bob.models import LottoTicket
 
 
 class LottoTicketSerializer(serializers.ModelSerializer):

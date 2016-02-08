@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from bob.models import LottoTicket
+from api.v0.ana.models import LottoTicket
 
 
 class LottoTicketAdmin(admin.ModelAdmin):

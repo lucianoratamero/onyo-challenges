@@ -14,12 +14,12 @@ urlpatterns = [
     }),
 ]
 
-if 'ana' in settings.INSTALLED_APPS:
+if 'api.v0.ana' in settings.INSTALLED_APPS:
     urlpatterns += [
-        url(r'^api/v0/ana/', include('ana.urls', namespace='ana')),
+        url(r'^api/v0/ana/', include('api.v0.ana.urls', namespace='ana')),
     ]
 
-if 'bob' in settings.INSTALLED_APPS:
+if 'api.v0.bob' in settings.INSTALLED_APPS:
     urlpatterns += [
-        url(r'^api/v0/bob/', include('bob.urls', namespace='bob')),
+        url(r'^api/v0/bob/', include('api.v0.bob.urls', namespace='bob')),
     ]

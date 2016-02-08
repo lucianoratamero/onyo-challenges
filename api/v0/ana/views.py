@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from ana.exceptions import BobTicketBadRequestException
-from ana.serializers import LottoTicketSerializer
-from ana.repositories import LottoTicketRepository
+from api.v0.ana.exceptions import BobTicketBadRequestException
+from api.v0.ana.serializers import LottoTicketSerializer
+from api.v0.ana.repositories import LottoTicketRepository
 
 
 class LottoTicketResultAPIView(APIView):
