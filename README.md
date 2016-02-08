@@ -2,11 +2,19 @@
 
 This is a Lotto Check Service made for Onyo`s Admissional Challenge and does not have any production application whatsoever. But it works, of course ;)
 
+### Live demo
+
+To see the live demo, use any of these two links:
+
+Ana: [http://lucianoratamero-onyo-ana.herokuapp.com/](http://lucianoratamero-onyo-ana.herokuapp.com/) | Bob: [http://lucianoratamero-onyo-bob.herokuapp.com/](http://lucianoratamero-onyo-bob.herokuapp.com/)
+
+To access the admin interface, use the username **onyo** and the password **onyo-challenge**.
+
 ### Development setup
 
 To setup this project to development, you need to clone this project, create and activate a virtualenv, install the dependencies and setup databases.
 
-First, install some OS dependencies. This differs from distro to distro, so I will only tell how to do it on Ubuntu 14.04:
+First, install some OS dependencies. This differs from distro to distro, so **I will only tell how to do it on Ubuntu 14.04**:
 
 ```
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
@@ -102,20 +110,44 @@ After pushing changes to heroku and with the app running, you need to setup your
 
 #### Heroku databases
 
-First, you need to migrate to the default database, used by Django for most everything, except for API specific models.
-
-```
-heroku run -a [heroku-app-name] python manage.py migrate
-```
-
-Beyond the basic django database, for each API you want to host, you need to setup that app's database too **(except if running all, since it does not need different databases)**.
+If you are deploying only Bob or Ana, you need to setup that app's database specifically.
 
 ```
 heroku run -a [heroku-app-name] python manage.py migrate --database=[django-app-name]_db
 ```
 
-Since it is completely decoupled from Bob, ff you are hosting Ana Django app, you need to pass to it Bob's API URL, even if it is running at the same host.
+But if you're running all, you don'te need to specify which database to use.
+
+```
+heroku run -a [heroku-app-name] python manage.py migrate
+```
+
+**Remember:** since Ana is **completely** decoupled from Bob but **depends** on it, if you are hosting Ana, you **need to configure** Bob's API URL on it's environment - **even if it is running at the same host**:
 
 ```
 heroku config:set -a [heroku-app-name] CURRENT_BOB_API_URL=[full-url-to-bob]
 ```
+
+### Explaining some decisions
+
+#### App structure
+
+I decided on the approach of having only one Django project with decouples apps to facilitate testing, make it easy to reuse code and have everything in only one codebase. The tradeoffs were the need of different settings for each kind of deployment and the need to have one big integration test that uses the [LiveServerTestCase](https://docs.djangoproject.com/en/1.9/topics/testing/tools/#django.test.LiveServerTestCase), which is usually used in acceptance/Selenium tests.
+
+This app structure also decouples versions of API, and only needs the reconfiguration of core urls and settings to enable use of a new version of the API. The tradeoff is, well, the need to reconfigure core urls and settings to use a new version :P
+
+#### Database structure
+
+Well, managing databases is always nasty. In this case, since all databases needed to be decoupled (and heroku does **not** like nor enable multiple databases on free plans), the configurations for development and production were really different - and most of my time was wasted trying to get everything to work on heroku. But, really, deploying something like this to Amazon would be a breeze.
+
+The thing is: since it was really easy to manage heroku applications using heroku toolbelt, I saw no need to make a fabfile for deployment. I know how to do so, but just thought that it wasn't necessary. Pragmatism, man, pragmatism.
+
+#### Code decisions
+
+My first idea was to make a full-fledged DDD app, with the domain layer completely decoupled from the view/serializer/model layers; and I tried. The tradeoff was some confusion on the number of files and each one's responsability, and I saw that everything became more confusing each time I attempted - so, instead, I decided to make it simple. The only design pattern I used, and barely, was the Repository, to Ana's API, because of the need to get info from Bob and shield the view layer from the service layer. Beyond that, I just saw no need to complicate things.
+
+### That's all, folks!
+
+Thanks for your time and for this challenge; it really brought me to think a lot of stuff I'm not used to. Too many months away from the back end makes you rusty. I hope that you enjoyed my code as much as I enjoyed making all this stuff up =)
+
+See ya, guys! o/
