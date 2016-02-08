@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from bob.views import LottoTicketResultAPIView
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'$', LottoTicketResultAPIView.as_view(), name='lotto_ticket_result')
-)
+]
