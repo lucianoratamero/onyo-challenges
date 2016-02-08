@@ -54,6 +54,14 @@ class LottoTicketResultAPIViewTestCase(APITestCase):
         self.assertIn('numbers', response.content)
         self.assertEqual(1, LottoTicket.objects.count())
 
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('id', response.content)
+        self.assertIn('is_winner', response.content)
+        self.assertIn('numbers', response.content)
+        self.assertEqual(1, LottoTicket.objects.count())
+
     def test_integration__post_returns_400_BAD_REQUEST_if_serializer_is_not_valid(self):
         self.assertEqual(0, LottoTicket.objects.count())
 
