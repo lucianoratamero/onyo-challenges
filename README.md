@@ -78,12 +78,20 @@ python manage.py runserver
 
 ### Deploying to heroku
 
-To deploy this app to heroku, first you need to [create and configure your heroku app](https://devcenter.heroku.com/articles/git).
+To deploy this app to heroku, there's no need to be able to run the project locally - you just need to have cloned this project and have [heroku toolbelt installed](https://toolbelt.heroku.com/debian) =)
 
-To deploy only one API Django app or all of them, you need to [set heroku configs accordingly](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application), so heroku knows which Django settings to use.
+But before deploying, you need to [create and configure a new heroku app](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote), so we can deploy to it. Remember your created heroku app name, it will be **very** important.
+
+Then, you need to [set heroku configs accordingly](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application), so heroku knows which Django settings to use. The available options are 'config.heroku.ana.settings', 'config.heroku.bob.settings' and 'config.heroku.all.settings', to deploy Ana, Bob or All.
 
 ```
 heroku config:set -a [heroku-app-name] DJANGO_SETTINGS_MODULE=[path.to.settings]
+```
+
+Then, push the changes to your heroku app:
+
+```
+git push heroku master
 ```
 
 After pushing changes to heroku and with the app running, you need to setup your databases.
