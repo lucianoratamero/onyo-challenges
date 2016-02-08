@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from ana.models import LottoTicket
+
+
+class LottoTicketAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(LottoTicket, LottoTicketAdmin)

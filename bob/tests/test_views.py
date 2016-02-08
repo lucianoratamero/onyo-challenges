@@ -19,7 +19,7 @@ class LottoTicketResultAPIViewTestCase(APITestCase):
     # Unit Tests
 
     @patch('bob.views.LottoTicketSerializer')
-    def test_unit__post_returns_201_CREATED_if_serializer_is_valid(self, mocked_serializer):
+    def test_unit__post_returns_200_OK_if_serializer_is_valid(self, mocked_serializer):
         expected_data = self.data
         expected_data.update({'is_winner': False})
         mocked_serializer().is_valid.return_value = True
@@ -28,7 +28,7 @@ class LottoTicketResultAPIViewTestCase(APITestCase):
         response = self.client.post(self.url, self.data, format='json')
 
         self.assertTrue(mocked_serializer().save.called)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.content, '{"is_winner":false,"numbers":[1,2,3,4,5,6]}')
 
     @patch('bob.views.LottoTicketSerializer')
@@ -43,12 +43,12 @@ class LottoTicketResultAPIViewTestCase(APITestCase):
 
     # Integration Tests
 
-    def test_integration__post_returns_201_CREATED_if_serializer_is_valid(self):
+    def test_integration__post_returns_200_OK_if_serializer_is_valid(self):
         self.assertEqual(0, LottoTicket.objects.count())
 
         response = self.client.post(self.url, self.data, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('id', response.content)
         self.assertIn('is_winner', response.content)
         self.assertIn('numbers', response.content)
