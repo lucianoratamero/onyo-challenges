@@ -18,9 +18,9 @@ To access the admin interface, use the username **onyo** and the password **onyo
 
 Both Ana and Bob answer to POST requests in the following format:
 
-'''
+```
 {"numbers": [list-of-six-numbers-between-1-and-60]}
-'''
+```
 
 ### Development setup
 
