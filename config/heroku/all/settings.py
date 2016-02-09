@@ -1,9 +1,6 @@
-from config.base_settings import *
+import dj_database_url
 
-INSTALLED_APPS += [
-    'ana',
-    'bob',
-]
+from config.all.settings import *
 
 # Update database configuration with $DATABASE_URL.
 db_from_env = dj_database_url.config(conn_max_age=500)

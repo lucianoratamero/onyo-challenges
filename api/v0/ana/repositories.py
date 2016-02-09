@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 
-from ana.models import LottoTicket
-from ana.services import get_bob_ticket_by_numbers
+from api.v0.ana.models import LottoTicket
+from api.v0.ana.services import get_bob_ticket_by_numbers
 
 
 class LottoTicketRepository(object):

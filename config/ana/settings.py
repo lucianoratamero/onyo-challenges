@@ -3,7 +3,7 @@ import os
 from config.base_settings import *
 
 INSTALLED_APPS += [
-    'ana',
+    'api.v0.ana',
 ]
 
 DATABASES['ana_db'] = {
@@ -20,4 +20,4 @@ DATABASE_ROUTERS += ['config.ana.db_router.AnaDBRouter']
 Configuration needed to fully decouple APIs
 '''
 
-CURRENT_BOB_API_URL = 'http://lucianoratamero-onyo-bob.heroku.com/api/v0/bob/'
+CURRENT_BOB_API_URL = os.environ.get('CURRENT_BOB_API_URL')

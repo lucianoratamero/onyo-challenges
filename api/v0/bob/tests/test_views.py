@@ -2,44 +2,36 @@
 from mock import patch
 
 from django.core.urlresolvers import reverse
-from django.test import LiveServerTestCase
 
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ana.models import LottoTicket
-from ana.exceptions import BobTicketBadRequestException
+from api.v0.bob.models import LottoTicket
 
 
-class LottoTicketResultAPIViewTestCase(APITestCase, LiveServerTestCase):
+class LottoTicketResultAPIViewTestCase(APITestCase):
 
     def setUp(self):
-        self.url = reverse('ana:lotto_ticket_result')
-        self.data = {'numbers': [1, 2, 3, 4, 5, 6]}
-
-    def tearDown(self):
         LottoTicket.objects.all().delete()
+        self.url = reverse('bob:lotto_ticket_result')
+        self.data = {'numbers': [1, 2, 3, 4, 5, 6]}
 
     # Unit Tests
 
-    @patch('ana.views.LottoTicketSerializer')
-    @patch('ana.views.LottoTicketRepository')
-    def test_unit__post_returns_200_OK_if_serializer_is_valid(self, mocked_repository, mocked_serializer):
-        dummy_lotto_ticket = LottoTicket(is_winner=False, numbers=[1, 2, 3, 4, 5, 6])
-        dummy_lotto_ticket.save()
-
+    @patch('api.v0.bob.views.LottoTicketSerializer')
+    def test_unit__post_returns_200_OK_if_serializer_is_valid(self, mocked_serializer):
+        expected_data = self.data
+        expected_data.update({'is_winner': False})
         mocked_serializer().is_valid.return_value = True
-        mocked_repository().get_by_numbers.return_value = dummy_lotto_ticket
+        mocked_serializer().data = expected_data
 
         response = self.client.post(self.url, self.data, format='json')
 
-        self.assertTrue(mocked_repository().get_by_numbers.called)
+        self.assertTrue(mocked_serializer().save.called)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('id', response.content)
-        self.assertIn('is_winner', response.content)
-        self.assertIn('numbers', response.content)
+        self.assertEqual(response.content, '{"is_winner":false,"numbers":[1,2,3,4,5,6]}')
 
-    @patch('ana.views.LottoTicketSerializer')
+    @patch('api.v0.bob.views.LottoTicketSerializer')
     def test_unit__post_returns_400_BAD_REQUEST_if_serializer_is_not_valid(self, mocked_serializer):
         mocked_serializer().is_valid.return_value = False
         mocked_serializer().errors = {'numbers': ['This field is required.']}
@@ -48,17 +40,6 @@ class LottoTicketResultAPIViewTestCase(APITestCase, LiveServerTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.content, '{"numbers":["This field is required."]}')
-
-    @patch('ana.views.LottoTicketSerializer')
-    @patch('ana.views.LottoTicketRepository')
-    def test_unit__post_returns_400_BAD_REQUEST_if_repository_raises_bad_request_exception(self, mocked_repository, mocked_serializer):
-        mocked_serializer().is_valid.return_value = True
-        mocked_repository().get_by_numbers.side_effect = BobTicketBadRequestException
-
-        response = self.client.post(self.url, self.data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.content, '{"reason":"Retrieving data from bob has failed."}')
 
     # Integration Tests
 

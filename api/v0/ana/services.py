@@ -4,7 +4,7 @@ import urllib2
 
 from django.conf import settings
 
-from ana.exceptions import BobTicketBadRequestException
+from api.v0.ana.exceptions import BobTicketBadRequestException
 
 
 def get_bob_ticket_by_numbers(numbers):
