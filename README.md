@@ -14,6 +14,14 @@ All: [http://lucianoratamero-onyo-all.herokuapp.com/](http://lucianoratamero-ony
 
 To access the admin interface, use the username **onyo** and the password **onyo-challenge**.
 
+### How to use the APIs
+
+Both Ana and Bob answer to POST requests in the following format:
+
+'''
+{"numbers": [list-of-six-numbers-between-1-and-60]}
+'''
+
 ### Development setup
 
 To setup this project to development, you need to clone this project, create and activate a virtualenv, install the dependencies and setup databases.
