@@ -4,9 +4,13 @@ This is a Lotto Check Service made for Onyo`s Admissional Challenge and does not
 
 ### Live demo
 
-To see the live demo, use any of these two links:
+To see the live demos, use any of these links:
 
-Ana: [http://lucianoratamero-onyo-ana.herokuapp.com/](http://lucianoratamero-onyo-ana.herokuapp.com/) | Bob: [http://lucianoratamero-onyo-bob.herokuapp.com/](http://lucianoratamero-onyo-bob.herokuapp.com/)
+Ana: [http://lucianoratamero-onyo-ana.herokuapp.com/](http://lucianoratamero-onyo-ana.herokuapp.com/)
+
+Bob: [http://lucianoratamero-onyo-bob.herokuapp.com/](http://lucianoratamero-onyo-bob.herokuapp.com/)
+
+All: [http://lucianoratamero-onyo-all.herokuapp.com/](http://lucianoratamero-onyo-all.herokuapp.com/)
 
 To access the admin interface, use the username **onyo** and the password **onyo-challenge**.
 
@@ -94,7 +98,7 @@ To deploy this app to heroku, there's no need to be able to run the project loca
 
 But before deploying, you need to [create and configure a new heroku app](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote), so we can deploy to it. Remember your created heroku app name, it will be **very** important.
 
-Then, you need to [set heroku configs accordingly](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application), so heroku knows which Django settings to use. The available options are 'config.heroku.ana.settings', 'config.heroku.bob.settings' and 'config.heroku.all.settings', to deploy Ana, Bob or All.
+Then, you need to [set heroku configs accordingly](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application), so heroku knows which Django settings to use. The available options are 'config.heroku.ana.settings', 'config.heroku.bob.settings' and 'config.heroku.all.settings', to deploy Ana, Bob or All:
 
 ```
 heroku config:set -a [heroku-app-name] DJANGO_SETTINGS_MODULE=[path.to.settings]
@@ -110,19 +114,19 @@ After pushing changes to heroku and with the app running, you need to setup your
 
 #### Heroku databases
 
-If you are deploying only Bob or Ana, you need to setup that app's database specifically.
+If you are deploying **only Bob or Ana**, you need to setup that app's database specifically.
 
 ```
 heroku run -a [heroku-app-name] python manage.py migrate --database=[django-app-name]_db
 ```
 
-But if you're running all, you don'te need to specify which database to use.
+But if you're running **all**, you don't need to specify which database to use.
 
 ```
 heroku run -a [heroku-app-name] python manage.py migrate
 ```
 
-**Remember:** since Ana is **completely** decoupled from Bob but **depends** on it, if you are hosting Ana, you **need to configure** Bob's API URL on it's environment - **even if it is running at the same host**:
+**Remember:** since Ana is **completely** decoupled from Bob but **depends** on it, if you are hosting Ana, you **need to configure** Bob's API URL on its environment - **even if it is running at the same host**:
 
 ```
 heroku config:set -a [heroku-app-name] CURRENT_BOB_API_URL=[full-url-to-bob]
@@ -132,19 +136,19 @@ heroku config:set -a [heroku-app-name] CURRENT_BOB_API_URL=[full-url-to-bob]
 
 #### App structure
 
-I decided on the approach of having only one Django project with decouples apps to facilitate testing, make it easy to reuse code and have everything in only one codebase. The tradeoffs were the need of different settings for each kind of deployment and the need to have one big integration test that uses the [LiveServerTestCase](https://docs.djangoproject.com/en/1.9/topics/testing/tools/#django.test.LiveServerTestCase), which is usually used in acceptance/Selenium tests.
+I decided on the approach of having only one Django project with decoupled apps to facilitate testing, make it easy to reuse code and have everything in only one codebase. The tradeoffs were the need of different settings for each kind of deployment and the need to have one big integration test that uses the [LiveServerTestCase](https://docs.djangoproject.com/en/1.9/topics/testing/tools/#django.test.LiveServerTestCase), which is usually used in acceptance/Selenium tests.
 
 This app structure also decouples versions of API, and only needs the reconfiguration of core urls and settings to enable use of a new version of the API. The tradeoff is, well, the need to reconfigure core urls and settings to use a new version :P
 
 #### Database structure
 
-Well, managing databases is always nasty. In this case, since all databases needed to be decoupled (and heroku does **not** like nor enable multiple databases on free plans), the configurations for development and production were really different - and most of my time was wasted trying to get everything to work on heroku. But, really, deploying something like this to Amazon would be a breeze.
+Well, managing databases is always nasty. In this case, since all databases needed to be decoupled (and heroku does **not** like **nor** enable multiple databases on free plans), the configurations for development and production were really different - and most of my time was wasted trying to get everything to work on heroku. But, really, deploying something like this to Amazon would be a breeze.
 
-The thing is: since it was really easy to manage heroku applications using heroku toolbelt, I saw no need to make a fabfile for deployment. I know how to do so, but just thought that it wasn't necessary. Pragmatism, man, pragmatism.
+The thing is: heroku is not good to deploy real apps, bit is easy do configure and deploy simple apps. Since it was really easy to manage heroku applications using heroku toolbelt, I saw no need to make a fabfile for deployment. I know how to make one, but just thought that it wasn't necessary. Pragmatism, man, pragmatism.
 
 #### Code decisions
 
-My first idea was to make a full-fledged DDD app, with the domain layer completely decoupled from the view/serializer/model layers; and I tried. The tradeoff was some confusion on the number of files and each one's responsability, and I saw that everything became more confusing each time I attempted - so, instead, I decided to make it simple. The only design pattern I used, and barely, was the Repository, to Ana's API, because of the need to get info from Bob and shield the view layer from the service layer. Beyond that, I just saw no need to complicate things.
+My first idea was to make a full-fledged DDD app, with the domain layer completely decoupled from the view/serializer/model layers; and I tried. The tradeoff was the proliferation of files and confusion in recognizing each one's responsability, and I saw that everything became more confusing each time I attempted - so, instead, I decided to make it simple. The only design pattern I used, and barely, was the Repository, to Ana's API, because it needed to get info from Bob and I wanted to shield the view layer from the service layer. Beyond that, I saw no need to complicate things.
 
 ### That's all, folks!
 
